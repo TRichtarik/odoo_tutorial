@@ -7,6 +7,8 @@
                 <group>
                     <field name="price" />
                     <field name="partner_id" />
+                    <field name="validity" />
+                    <field name="date_deadline" />
                     <field name="status" />
                 </group>
             </form>
@@ -20,8 +22,18 @@
             <tree string="Offers">
                 <field name="price" />
                 <field name="partner_id" />
+                <field name="validity" />
+                <field name="partner_id" />
                 <field name="status" />
             </tree>
         </field>
     </record>
+
+    <record id="action_estate_property_offer" model="ir.actions.act_window">
+        <field name="name">Property Offers</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_estate_property_offer_tree" />
+    </record>
+
 </odoo>
