@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Real Estate Property Offers"
+    _order = "price desc"
 
     _sql_constraints = [
         (
@@ -22,6 +23,12 @@ class EstatePropertyOffer(models.Model):
     partner_id = fields.Many2one("res.partner", string="Partner", required=True)
     property_id = fields.Many2one(
         "estate.property", string="Property", required=True, ondelete="cascade"
+    )
+    property_type_id = fields.Many2one(
+        "estate.property.type",
+        related="property_id.property_type_id",
+        store=True,
+        string="Property Type",
     )
 
     validity = fields.Integer(string="Validity (Days)", default=7)

@@ -1,10 +1,24 @@
 <odoo>
+    <!-- List View for Property Tags -->
     <record id="view_estate_property_tag_list" model="ir.ui.view">
         <field name="name">estate.property.tag.list</field>
         <field name="model">estate.property.tag</field>
         <field name="arch" type="xml">
-            <tree string="Property Tags">
+            <tree string="Property Tags" editable="bottom">
                 <field name="name" />
+                <field name="color" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Property Tags -->
+    <record id="view_estate_property_tag_tree" model="ir.ui.view">
+        <field name="name">estate.property.tag.tree</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Tags">
+                <field name="name" />
+                <field name="color" widget="colorpicker" />
             </tree>
         </field>
     </record>
@@ -17,12 +31,15 @@
                 <sheet>
                     <group>
                         <field name="name" />
+                        <field name="color" widget="colorpicker" />
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
+
+    <!-- Action for Property Tags -->
     <record id="action_estate_property_tag" model="ir.actions.act_window">
         <field name="name">Property Tags</field>
         <field name="res_model">estate.property.tag</field>

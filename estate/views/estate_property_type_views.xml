@@ -1,4 +1,5 @@
 <odoo>
+    <!-- List View for Property Types -->
     <record id="view_estate_property_type_list" model="ir.ui.view">
         <field name="name">estate.property.type.list</field>
         <field name="model">estate.property.type</field>
@@ -9,20 +10,37 @@
         </field>
     </record>
 
+    <!-- Form View for Property Types -->
     <record id="view_estate_property_type_form" model="ir.ui.view">
         <field name="name">estate.property.type.form</field>
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <form string="Property Type">
+                <header>
+                    <button name="%(action_estate_property_offer)d" type="action" string="Offers"
+                        icon="fa-list" class="oe_stat_button">
+                        <field name="offer_count" widget="statinfo" string="Offers" />
+                    </button>
+                </header>
                 <sheet>
                     <group>
                         <field name="name" />
+                    </group>
+                    <group>
+                        <field name="property_ids">
+                            <tree>
+                                <field name="name" />
+                                <field name="expected_price" />
+                                <field name="state" />
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
+    <!-- Action for Property Types -->
     <record id="action_estate_property_type" model="ir.actions.act_window">
         <field name="name">Property Types</field>
         <field name="res_model">estate.property.type</field>
