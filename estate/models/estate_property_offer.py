@@ -8,6 +8,20 @@ class EstatePropertyOffer(models.Model):
     _description = "Real Estate Property Offers"
     _order = "price desc"
 
+    @api.model
+    def create(self, vals):
+        property = self.env["estate.property"].browse(vals["property_id"])
+
+        if property.offer_ids and vals["price"] < max(
+            property.offer_ids.mapped("price")
+        ):
+            raise UserError(
+                "You cannot create an offer with a price lower than an existing offer."
+            )
+
+        property.state = "offer_received"
+        return super(EstatePropertyOffer, self).create(vals)
+
     _sql_constraints = [
         (
             "check_offer_price",

@@ -9,6 +9,14 @@ class EstateProperty(models.Model):
     _description = "Real Estate Property"
     _order = "id desc"
 
+    def unlink(self):
+        for property in self:
+            if property.state not in ["new", "canceled"]:
+                raise UserError(
+                    "You can only delete properties that are 'New' or 'Canceled'."
+                )
+        return super(EstateProperty, self).unlink()
+
     _sql_constraints = [
         (
             "check_expected_price",
