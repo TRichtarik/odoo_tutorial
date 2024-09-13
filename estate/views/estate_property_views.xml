@@ -136,6 +136,7 @@
         </field>
     </record>
 
+    <!-- Kanban View for Properties -->
     <record id="view_estate_property_kanban" model="ir.ui.view">
         <field name="name">estate.property.kanban</field>
         <field name="model">estate.property</field>

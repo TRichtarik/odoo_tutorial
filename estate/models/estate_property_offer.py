@@ -8,28 +8,6 @@ class EstatePropertyOffer(models.Model):
     _description = "Real Estate Property Offers"
     _order = "price desc"
 
-    @api.model
-    def create(self, vals):
-        property = self.env["estate.property"].browse(vals["property_id"])
-
-        if property.offer_ids and vals["price"] < max(
-            property.offer_ids.mapped("price")
-        ):
-            raise UserError(
-                "You cannot create an offer with a price lower than an existing offer."
-            )
-
-        property.state = "offer_received"
-        return super(EstatePropertyOffer, self).create(vals)
-
-    _sql_constraints = [
-        (
-            "check_offer_price",
-            "CHECK(price > 0)",
-            "The offer price must be strictly positive.",
-        )
-    ]
-
     price = fields.Float(string="Price", required=True)
     status = fields.Selection(
         [("accepted", "Accepted"), ("refused", "Refused")], string="Status", copy=False
@@ -44,7 +22,6 @@ class EstatePropertyOffer(models.Model):
         store=True,
         string="Property Type",
     )
-
     validity = fields.Integer(string="Validity (Days)", default=7)
     date_deadline = fields.Date(
         string="Deadline",
@@ -52,6 +29,28 @@ class EstatePropertyOffer(models.Model):
         inverse="_inverse_date_deadline",
         store=True,
     )
+
+    _sql_constraints = [
+        (
+            "check_offer_price",
+            "CHECK(price > 0)",
+            "The offer price must be strictly positive.",
+        )
+    ]
+
+    @api.model
+    def create(self, vals):
+        property = self.env["estate.property"].browse(vals["property_id"])
+
+        if property.offer_ids and vals["price"] < max(
+            property.offer_ids.mapped("price")
+        ):
+            raise UserError(
+                "You cannot create an offer with a price lower than an existing offer."
+            )
+
+        property.state = "offer_received"
+        return super(EstatePropertyOffer, self).create(vals)
 
     @api.depends("validity", "create_date")
     def _compute_date_deadline(self):
@@ -82,7 +81,6 @@ class EstatePropertyOffer(models.Model):
                 raise UserError("An offer has already been accepted for this property.")
 
             record.status = "accepted"
-
             record.property_id.selling_price = record.price
             record.property_id.buyer_id = record.partner_id
 

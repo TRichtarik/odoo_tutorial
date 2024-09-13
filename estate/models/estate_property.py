@@ -1,6 +1,5 @@
 from odoo import fields, models, api
-from odoo.exceptions import UserError
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -8,14 +7,6 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Real Estate Property"
     _order = "id desc"
-
-    def unlink(self):
-        for property in self:
-            if property.state not in ["new", "canceled"]:
-                raise UserError(
-                    "You can only delete properties that are 'New' or 'Canceled'."
-                )
-        return super(EstateProperty, self).unlink()
 
     _sql_constraints = [
         (
@@ -73,10 +64,8 @@ class EstateProperty(models.Model):
     tag_ids = fields.Many2many("estate.property.tag", string="Tags")
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
 
-    # Property Type
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
 
-    # State Management
     state = fields.Selection(
         [
             ("new", "New"),
@@ -141,3 +130,11 @@ class EstateProperty(models.Model):
             if record.state == "sold":
                 raise UserError("Sold properties cannot be canceled.")
             record.state = "canceled"
+
+    def unlink(self):
+        for property in self:
+            if property.state not in ["new", "canceled"]:
+                raise UserError(
+                    "You can only delete properties that are 'New' or 'Canceled'."
+                )
+        return super(EstateProperty, self).unlink()
