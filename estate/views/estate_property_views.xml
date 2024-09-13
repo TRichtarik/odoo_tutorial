@@ -136,11 +136,45 @@
         </field>
     </record>
 
+    <record id="view_estate_property_kanban" model="ir.ui.view">
+        <field name="name">estate.property.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="property_type_id" js_class="estate_property_kanban"
+                create="false" quick_create="false">
+                <field name="state" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="name" />
+                            <div>
+                                <strong>Expected Price:</strong>
+                                <field name="expected_price" />
+                            </div>
+                            <div t-if="record.state.raw_value == 'offer_received'">
+                                <strong>Best Price:</strong>
+                                <field name="best_price" />
+                            </div>
+                            <div t-if="record.state.raw_value == 'offer_accepted'">
+                                <strong>Selling Price:</strong>
+                                <field name="selling_price" />
+                            </div>
+                            <div>
+                                <field name="tag_ids" widget="many2many_tags" />
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
     <!-- Action for Property List -->
     <record id="action_estate_property" model="ir.actions.act_window">
         <field name="name">Estate Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_Available': 1}</field>
     </record>
 </odoo>
